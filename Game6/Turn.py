@@ -27,9 +27,9 @@ class MainTurn(Component.HeadComponent):
         self.turnFrame.grid(row=0, column=2, sticky=NSEW)
         self.configureEvenWeight(self.turnFrame, 6, 3)
         # adds current turn buttons
-        self.Label1 = Label(self.turnFrame, text=self.players[0]['playerName'] + "\nX", background='green2', width=10, height=5)
+        self.Label1 = Label(self.turnFrame, text=self.players[0]['playerName'], background='green2', width=10, height=5)
         self.Label1.grid(row=2, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
-        self.Label2 = Label(self.turnFrame, text=self.players[1]['playerName'] + "\nO", background='white', width=10, height=5)
+        self.Label2 = Label(self.turnFrame, text=self.players[1]['playerName'], background='white', width=10, height=5)
         self.Label2.grid(row=3, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
 
     def toggleColor(self):
