@@ -1,4 +1,4 @@
-### todo: CLASS
+# todo: CLASS
 # 1 TODO:
 
 from tkinter import Frame, Button

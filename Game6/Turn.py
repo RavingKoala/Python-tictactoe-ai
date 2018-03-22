@@ -1,8 +1,9 @@
 ### todo: CLASS
-# 1 TODO: create object containing playeble and name
+# 1 TODO: change turn to int containing whos turn it is
 
 from tkinter import Frame, Label
 from tkinter import NSEW
+from random import randint
 from HeadClasses import Component
 
 
@@ -12,11 +13,16 @@ class MainTurn(Component.HeadComponent):
     '''
 
     # predeclaring attributes
-    players = [{"playerName": "Player1", "isPlaying": True, "isMyTurn": True, "PlayerIcon": "X", "label": "label1"},
-               {"playerName": "Player2", "isPlaying": True, "isMyTurn": False, "PlayerIcon": "O", "label": "label2"},
-               {"playerName": "AI", "isPlaying": False, "isMyTurn": False, "PlayerIcon": "", "label": ""},
-               {"playerName": "AI2", "isPlaying": False, "isMyTurn": False, "PlayerIcon": "", "label": ""}]
-    turnFrame = Label1 = Label2 = TTTGame = None
+    turnFrame = label1 = label2 = TTTGame = None
+
+    players = [{"playerName": "Player1", "playerIcon": "", "label": ""},
+               {"playerName": "Player2", "playerIcon": "", "label": ""},
+               {"playerName": "AI", "playerIcon": "", "label": ""},
+               {"playerName": "AI2", "playerIcon": "", "label": ""}]
+
+    playingPlayers = [players[0], players[1]]
+
+    turn = 0
 
     def addClasses(self, TicTacToe):
         self.TTTGame = TicTacToe
@@ -27,50 +33,80 @@ class MainTurn(Component.HeadComponent):
         self.turnFrame.grid(row=0, column=2, sticky=NSEW)
         self.configureEvenWeight(self.turnFrame, 6, 3)
         # adds current turn buttons
-        self.Label1 = Label(self.turnFrame, text=self.players[0]['playerName'], background='green2', width=10, height=5)
-        self.Label1.grid(row=2, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
-        self.Label2 = Label(self.turnFrame, text=self.players[1]['playerName'], background='white', width=10, height=5)
-        self.Label2.grid(row=3, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
+        self.label1 = Label(self.turnFrame, width=10, height=5)
+        self.label1.grid(row=2, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
+        self.label2 = Label(self.turnFrame, width=10, height=5)
+        self.label2.grid(row=3, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
+        self.setMode(1)
+        self.resetTurn()
 
-    def toggleColor(self):
-        if self.player == 'X':
-            self.setTurnColor('O')
-        elif self.player == 'O':
-            self.setTurnColor('X')
+    def getPlayerIcon(self):
+        return self.playingPlayers[self.turn]['playerIcon']
 
-    def toggleTurn(self):
-        self.toggleColor()
+    def changeTurn(self):
+        newTurn = (self.turn + 1) % 2
+        self.setTurn(newTurn)
+        self.updateTurnColor()
 
-    def setTurnColor(self, Turn):
-        if Turn == 'X':
-            self.Label2.configure(background='white')
-            self.Label1.configure(background='green2')
-            self.player = 'X'
-        elif Turn == 'O':
-            self.Label1.configure(background='white')
-            self.Label2.configure(background='green2')
-            self.player = 'O'
+    def updateTurnColor(self):
+        LabelNr = self.playingPlayers[self.turn]['label']
 
-    def getPlaying(self):
-        playing = []
-        for player in self.players:
-            if player['isplaying']:
-                playing.append(player)
-        return playing
+        if LabelNr == 'label1':
+            self.label1.configure(background='green2')
+            self.label2.configure(background='white')
+        elif LabelNr == 'label2':
+            self.label1.configure(background='white')
+            self.label2.configure(background='green2')
+
+    def updateLabelText(self):
+        self.label1['text'] = self.playingPlayers[0]['playerName'] + "\n" + self.playingPlayers[0]['playerIcon']
+        self.label2['text'] = self.playingPlayers[1]['playerName'] + "\n" + self.playingPlayers[1]['playerIcon']
 
     def resetTurn(self):
-        self.setTurnColor('X')
+        self.setTurn(randint(0, 1))
+        self.updateTurnColor()
 
-    def setTurn(self, Player=None, PlayerName=None, PlayerIcon=None):
-        if Player != None:
-            self.players[Player]['isMyTurn'] = True
-        elif PlayerName != None:
-            self.players[Player]['isMyTurn'] = True
-        elif PlayerIcon != None:
-            pass
+    def setTurn(self, Int):
+        self.turn = Int
 
     def getTurn(self):
-        for player in self.players:
-            if player['isMyTurn']:
-                return player
-        return "unknown"
+        return self.turn
+
+    def getPlayerName(self):
+        return self.playingPlayers[self.turn]['playerName']
+
+    def setMode(self, Mode):
+        self.clearPlayerData()
+        self.appointPlayers(Mode)
+        self.updatePlayerData()
+        self.updateLabelText()
+        self.updateTurnColor()
+
+    def clearPlayerData(self):
+        for player in self.playingPlayers:
+            player['playerIcon'] = ""
+            player['label'] = ""
+
+    def appointPlayers(self, Mode):
+        if Mode == 1:
+            self.playingPlayers[0] = self.players[0]
+            self.playingPlayers[1] = self.players[1]
+        elif Mode == 2:
+            self.playingPlayers[0] = self.players[0]
+            self.playingPlayers[1] = self.players[2]
+        elif Mode == 3:
+            self.playingPlayers[0] = self.players[2]
+            self.playingPlayers[1] = self.players[3]
+
+    def updatePlayerData(self):
+        self.setPlayerLabel()
+        self.setRandomplayerIcon()
+
+    def setPlayerLabel(self):
+        self.playingPlayers[0]['label'] = "label1"
+        self.playingPlayers[1]['label'] = "label2"
+
+    def setRandomplayerIcon(self):
+        player = randint(0, 1)
+        self.playingPlayers[player]['playerIcon'] = 'X'
+        self.playingPlayers[1 if player == 0 else 0]['playerIcon'] = 'O'

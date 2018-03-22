@@ -6,7 +6,7 @@
 # todo: CLASS
 # 1 TODO:
 
-from tkinter import Tk, Button, NSEW
+from tkinter import Tk
 from HeadClasses import Component
 import Turn
 import TicTacToe
@@ -21,7 +21,7 @@ class Main(Component.HeadComponent):
     Options = TicTacToe = Turn = None
 
     fullscreen = True
-    popupsEnabled = False
+    popupsEnabled = True
 
     testText = 1
 
@@ -46,6 +46,7 @@ class Main(Component.HeadComponent):
         self.root.bind('<Control-w>', self.quit)
         self.root.bind('<Control-Key-1>', self.setMode1)
         self.root.bind('<Control-Key-2>', self.setMode2)
+        self.root.bind('<Control-Key-3>', self.setMode3)
 
     def quit(self, _event=None):  # _var = unused
         self.root.destroy()
@@ -56,11 +57,14 @@ class Main(Component.HeadComponent):
     def setMode2(self, _event=None):
         self.TicTacToe.ChangeMode(2)
 
+    def setMode3(self, _event=None):
+        self.TicTacToe.ChangeMode(3)
+
     def resetGame(self, _event=None):
         self.TicTacToe.resetGame()
 
     def toggleFullscreen(self, _event=None):
-        self.fullscreen = not self.fullscreen  # Just toggling the boolean
+        self.fullscreen = not self.fullscreen  # Just toggling the boolean5
         self.root.attributes("-fullscreen", self.fullscreen)
 
     def escapeFullscreen(self, _event=None):
@@ -80,16 +84,6 @@ class Main(Component.HeadComponent):
         self.Options.addGui(self.masterFrame)
         self.TicTacToe.addGui(self.masterFrame)
         self.Turn.addGui(self.masterFrame)
-
-        self.testButton = Button(self.masterFrame, command=lambda: self.changeText(self.testText), width=3, height=1, text=1)
-        self.testButton.grid(row=1, column=1, sticky=NSEW)
-
-    def getText(self):
-        return self.testText
-
-    def changeText(self, Text):
-        buttonText = Text + 1
-        self.testButton['text'] = buttonText
 
 
 # start app only if directly accessed

@@ -1,0 +1,25 @@
+names based off of first position
+┌───┬───┬───┐
+│   │   │cor│ cor = corner
+├───┼───┼───┤
+│   │mid│   │ mid = middle
+├───┼───┼───┤
+│   │sid│   │ sid = side
+└───┴───┴───┘
+ex.
+┌───┬───┬───┐
+│x 9│O 6│X 3│
+├───┼───┼───┤
+│X 5│O 2│O 4│
+├───┼───┼───┤
+│O 8│X 7│X 1│
+└───┴───┴───┘
+1. corner
+2. middle
+3. same-side corner
+4. same-side middle
+5. cross opposite-side middle
+6. cross same-side middle
+7. opposite middle
+8. opposite-corner
+9. cross corner
