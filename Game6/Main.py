@@ -22,8 +22,7 @@ class Main(Component.HeadComponent):
 
     Options = TicTacToe = Turn = Monkey = Ai = None
 
-    fullscreen = True
-    popupsEnabled = True
+    settings = {'fullscreen': False, 'popupsEnabled': True}
 
     testText = 1
 
@@ -32,7 +31,7 @@ class Main(Component.HeadComponent):
         # set percentage of stretch
         self.configureEvenWeight(self.masterFrame, 1, 3)
         self.masterFrame.minsize(500, 400)
-        if self.fullscreen:
+        if self.settings['fullscreen']:
             self.activateFullscreen()
 
     def start(self):
@@ -78,29 +77,29 @@ class Main(Component.HeadComponent):
 
     def activateFullscreen(self):
         self.root.attributes("-fullscreen", True)
-        self.fullscreen = True
+        self.settings['fullscreen'] = True
 
     def toggleFullscreen(self, _event=None):
-        self.fullscreen = not self.fullscreen  # Just toggling the boolean
-        self.root.attributes("-fullscreen", self.fullscreen)
+        self.settings['fullscreen'] = not self.settings['fullscreen']  # Just toggling the boolean
+        self.root.attributes("-fullscreen", self.settings['fullscreen'])
 
     def escapeFullscreen(self, _event=None):
         self.root.attributes("-fullscreen", False)
-        self.fullscreen = False
+        self.settings['fullscreen'] = False
 
     def setupComponents(self):
         # declare classes
-        self.Options = Options.MainOptions(self.popupsEnabled)
-        self.TicTacToe = TicTacToe.MainTicTacToe(self.popupsEnabled)
+        self.Options = Options.MainOptions(self.settings['popupsEnabled'])
+        self.TicTacToe = TicTacToe.MainTicTacToe(self.settings['popupsEnabled'])
         self.Turn = Turn.MainTurn()
-        self.Ai = Ai.MainAi()
         self.Monkey = Monkey.MainMonkey()
+        self.Ai = Ai.MainAi()
         # connect classes
         self.Options.addClasses(self.TicTacToe)
         self.TicTacToe.addClasses(self.Turn)
         self.Turn.addClasses(self.TicTacToe, self.Monkey, self.Ai)
-        self.Ai.addClasses(self.TicTacToe)
         self.Monkey.addClasses(self.TicTacToe)
+        self.Ai.addClasses(self.TicTacToe)
         # setup gui
         self.Options.addGui(self.masterFrame)
         self.TicTacToe.addGui(self.masterFrame)

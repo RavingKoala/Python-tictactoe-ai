@@ -18,5 +18,5 @@ class MainMonkey():
                 if textField == "":
                     possibilities[len(possibilities)] = {'Y': y, 'X': x}
         chosenField = randint(0, len(possibilities) - 1)
-        self.TTTGame.TTTBtn_onClick(possibilities[chosenField]['Y'], possibilities[chosenField]['X'])
         sleep(0.5)
+        self.TTTGame.TTTBtn_onClick(possibilities[chosenField]['Y'], possibilities[chosenField]['X'])

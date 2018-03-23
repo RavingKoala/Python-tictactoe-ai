@@ -18,15 +18,15 @@ class HeadComponent():
         for I in range(X):
             Component.grid_columnconfigure(I, weight=1)
 
-    @staticmethod
-    def doPopup(Type="Undefined", Text="Empty"):
+    def doPopup(self, Type="Undefined", Text="Empty"):
         toplevel = Toplevel()
+        toplevel.focus_force()
 
-        def selfDestroy():
+        def selfDestroy(_event=None):
             toplevel.destroy()
 
         def setKeybinds(component):
-            component.bind("Any-KeyPress", selfDestroy)
+            component.bind("<Key>", selfDestroy)
 
         def getPopupMessage(Type="Undefined", Text="Empty"):
             if type == "Lost":
@@ -40,9 +40,10 @@ class HeadComponent():
             return "Something went wrong." + "\n" + "Please contact the developer about this problem."
 
         setKeybinds(toplevel)
-        toplevel.minsize(100, 100)
+        toplevel.minsize(200, 10)
         label1 = Label(toplevel)
-        label1.grid(sticky=NSEW)
+        label1.grid(row=1, column=1, sticky=NSEW)
+        self.configureEvenWeight(toplevel, 3, 3)
         if Type == "Undefined" and Text == "Empty":
             label1.configure(text="Something went wrong." + "\n" + "Please contact the developer about this problem.")
         else:
