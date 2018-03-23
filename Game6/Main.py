@@ -1,10 +1,10 @@
-# todo: GENERAL
+### todo: GENERAL
 # 1 TODO: add consistent, frequent comments
 # 2 TODO: use HeadClass' functions and add as many functions as wanted
 # 3 TODO: Finish Gamemaster and add more functionality
 
-# todo: CLASS
-# 1 TODO:
+### todo: CLASS
+# 1 TODO: add comments
 
 from tkinter import Tk
 from HeadClasses import Component
@@ -32,6 +32,8 @@ class Main(Component.HeadComponent):
         # set percentage of stretch
         self.configureEvenWeight(self.masterFrame, 1, 3)
         self.masterFrame.minsize(500, 400)
+        if self.fullscreen:
+            self.activateFullscreen()
 
     def start(self):
         self.setupComponents()
@@ -42,6 +44,7 @@ class Main(Component.HeadComponent):
 
     def setKeybinds(self):
         self.root.bind('<Escape>', self.escapeFullscreen)
+        self.root.bind('<Delete>', self.escapeFullscreen)
         self.root.bind('<Control-f>', self.toggleFullscreen)
         self.root.bind('<F11>', self.toggleFullscreen)
         self.root.bind('<Control-r>', self.resetGame)
@@ -73,8 +76,12 @@ class Main(Component.HeadComponent):
     def resetGame(self, _event=None):
         self.TicTacToe.resetGame()
 
+    def activateFullscreen(self):
+        self.root.attributes("-fullscreen", True)
+        self.fullscreen = True
+
     def toggleFullscreen(self, _event=None):
-        self.fullscreen = not self.fullscreen  # Just toggling the boolean5
+        self.fullscreen = not self.fullscreen  # Just toggling the boolean
         self.root.attributes("-fullscreen", self.fullscreen)
 
     def escapeFullscreen(self, _event=None):
@@ -92,6 +99,8 @@ class Main(Component.HeadComponent):
         self.Options.addClasses(self.TicTacToe)
         self.TicTacToe.addClasses(self.Turn)
         self.Turn.addClasses(self.TicTacToe, self.Monkey, self.Ai)
+        self.Ai.addClasses(self.TicTacToe)
+        self.Monkey.addClasses(self.TicTacToe)
         # setup gui
         self.Options.addGui(self.masterFrame)
         self.TicTacToe.addGui(self.masterFrame)

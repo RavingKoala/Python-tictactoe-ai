@@ -1,5 +1,5 @@
-# todo: CLASS
-# 1 TODO:
+### todo: CLASS
+# 1 TODO: add comments
 
 from tkinter import Frame, Button
 from tkinter import NSEW

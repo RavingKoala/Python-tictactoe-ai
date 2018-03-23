@@ -1,5 +1,5 @@
-# todo: CLASS
-# 1 TODO:
+### todo: CLASS
+# 1 TODO: add comments
 
 from tkinter import Frame, Button, messagebox
 from tkinter import NSEW
@@ -16,6 +16,7 @@ class MainTicTacToe(Component.HeadComponent):
     # predeclaring attributes
     TTTButtons = []
     TTTFrame = turn = None
+    dimensions = {'Y': 3, 'X': 3}
 
     def __init__(self, MainPopupsBool):
         self.PopupsEnabled = MainPopupsBool
@@ -27,12 +28,12 @@ class MainTicTacToe(Component.HeadComponent):
         # add TicTacToe frame
         self.TTTFrame = Frame(MasterFrame)
         self.TTTFrame.grid(row=0, column=1, sticky=NSEW)
-        self.configureEvenWeight(self.TTTFrame, 3, 3)
+        self.configureEvenWeight(self.TTTFrame, self.dimensions['Y'], self.dimensions['X'])
 
         # add the buttons
-        for y in range(3):
+        for y in range(self.dimensions['Y']):
             self.TTTButtons.append([])
-            for x in range(3):
+            for x in range(self.dimensions['X']):
                 self.TTTButtons[y].append(Button(self.TTTFrame, command=lambda Y=y, X=x: self.TTTBtn_onClick(Y, X), font='calibri 34 bold', text="", relief='groove', borderwidth=3, width=3, height=1))
                 self.TTTButtons[y][x].grid(row=y, column=x, ipadx=(0), ipady=(0), padx=(5, 5), pady=(5, 5), sticky=NSEW)
 
@@ -44,7 +45,8 @@ class MainTicTacToe(Component.HeadComponent):
                 self.doWin()
             elif self.checkDraw():
                 self.doDraw()
-            self.turn.changeTurn()
+            else:
+                self.turn.changeTurn()
 
     def setBtnText(self, Y, X, Text):
         self.TTTButtons[Y][X].configure(text=Text)
@@ -116,7 +118,8 @@ class MainTicTacToe(Component.HeadComponent):
 
     def doDraw(self):
         self.endGame()
-        self.doPopup(Type="Draw")
+        if self.PopupsEnabled:
+            self.doPopup(Type="Draw")
 
     def getAllBtnText(self):
         textList = []
@@ -132,20 +135,22 @@ class MainTicTacToe(Component.HeadComponent):
     def gameStarted(self):
         textList = self.getAllBtnText()
         for textRow in textList:
-            for labelText in textRow:
-                if labelText != "":
-                    return True
+            if textRow.count("") < self.dimensions['X']:
+                print(textRow.count(""))
+                return True
         return False
 
     def checkChangeMode(self, ModeNr):
         if self.PopupsEnabled and self.gameStarted():
             if messagebox.askquestion("Change mode", "Are you sure you want to reset the game?", icon='warning') == 'yes':
                 self.ChangeMode(ModeNr)
+            else:
+                self.ChangeMode(ModeNr)
+        else:
             self.ChangeMode(ModeNr)
-        self.ChangeMode(ModeNr)
 
     def ChangeMode(self, Mode):
-        self.resetGame()
+        self.resetButtonsText()
         if self.getMode() != Mode:
             self.setMode(Mode)
             self.turn.setMode(Mode)

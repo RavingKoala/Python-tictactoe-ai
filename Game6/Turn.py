@@ -1,5 +1,5 @@
 ### todo: CLASS
-# 1 TODO: change turn to int containing whos turn it is
+# 1 TODO: add comments
 
 from tkinter import Frame, Label
 from tkinter import NSEW
@@ -15,12 +15,12 @@ class MainTurn(Component.HeadComponent):
     # predeclaring attributes
     turnFrame = label1 = label2 = TTTGame = ai = monkey = None
 
-    players = [{"playerName": "player1", "playerIcon": "", "label": ""},
-               {"playerName": "player2", "playerIcon": "", "label": ""},
-               {"playerName": "monkey", "playerIcon": "", "label": ""},
-               {"playerName": "monkey2", "playerIcon": "", "label": ""},
-               {"playerName": "AI", "playerIcon": "", "label": ""},
-               {"playerName": "AI2", "playerIcon": "", "label": ""}]
+    players = [{'playerName': "player1", 'playerIcon': "", 'label': ""},
+               {'playerName': "player2", 'playerIcon': "", 'label': ""},
+               {'playerName': "monkey", 'playerIcon': "", 'label': ""},
+               {'playerName': "monkey2", 'playerIcon': "", 'label': ""},
+               {'playerName': "AI", 'playerIcon': "", 'label': ""},
+               {'playerName': "AI2", 'playerIcon': "", 'label': ""}]
 
     playingPlayers = [players[0], players[1]]
 
@@ -71,13 +71,14 @@ class MainTurn(Component.HeadComponent):
     def setTurn(self, Int):
         self.turn = Int
         turnName = self.getPlayerName()
-        print(turnName)
-        if turnName != "player1" and turnName != "player2":
+        if turnName == "player1" or turnName == "player2":
+            self.TTTGame.enableButtons()
+        else:
             self.TTTGame.disableButtons()
             if turnName == "monkey" or turnName == "monkey2":
-                self.monkey.requestTurn()
+                self.monkey.requestMove()
             if turnName == "AI" or turnName == "AI2":
-                self.ai.requestTurn()
+                self.ai.requestMove()
 
     def getTurn(self):
         return self.turn
@@ -90,7 +91,7 @@ class MainTurn(Component.HeadComponent):
         self.appointPlayers(Mode)
         self.updatePlayerData()
         self.updateLabelText()
-        self.updateTurnColor()
+        self.resetTurn()
 
     def clearPlayerData(self):
         for player in self.playingPlayers:
@@ -125,5 +126,5 @@ class MainTurn(Component.HeadComponent):
 
     def setRandomplayerIcon(self):
         playerIndex = randint(0, 1)
-        self.playingPlayers[playerIndex]['playerIcon'] = 'X'
-        self.playingPlayers[1 if playerIndex == 0 else 0]['playerIcon'] = 'O'
+        self.playingPlayers[playerIndex]['playerIcon'] = "X"
+        self.playingPlayers[1 if playerIndex == 0 else 0]['playerIcon'] = "O"

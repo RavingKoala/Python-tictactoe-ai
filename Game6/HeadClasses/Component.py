@@ -1,4 +1,4 @@
-# todo: CLASS
+### todo: CLASS
 # 1 TODO: add keybinds
 # 2 TODO: set tooltip option, with keybinds info for buttons
 
@@ -26,7 +26,7 @@ class HeadComponent():
             toplevel.destroy()
 
         def setKeybinds(component):
-            component.bind("<Key>", selfDestroy)
+            component.bind("Any-KeyPress", selfDestroy)
 
         def getPopupMessage(Type="Undefined", Text="Empty"):
             if type == "Lost":
