@@ -1,7 +1,7 @@
 # todo: CLASS
 # 1 TODO:
 
-from tkinter import Frame, Button, Label, messagebox, Toplevel
+from tkinter import Frame, Button, messagebox
 from tkinter import NSEW
 from HeadClasses import Component
 
@@ -11,7 +11,7 @@ class MainTicTacToe(Component.HeadComponent):
         contains the game
     '''
 
-    mode = 1
+    mode = 0
     buttonsDisabled = False
     # predeclaring attributes
     TTTButtons = []
@@ -20,8 +20,8 @@ class MainTicTacToe(Component.HeadComponent):
     def __init__(self, MainPopupsBool):
         self.PopupsEnabled = MainPopupsBool
 
-    def addClasses(self, Turn):
-        self.turn = Turn
+    def addClasses(self, TurnClass):
+        self.turn = TurnClass
 
     def addGui(self, MasterFrame):
         # add TicTacToe frame
@@ -33,11 +33,11 @@ class MainTicTacToe(Component.HeadComponent):
         for y in range(3):
             self.TTTButtons.append([])
             for x in range(3):
-                self.TTTButtons[y].append(Button(self.TTTFrame, command=lambda Y=y, X=x: self.TTTBtn_onClick(Y, X), font='calibri 34 bold', text='', relief='groove', borderwidth=3, width=3, height=1))
+                self.TTTButtons[y].append(Button(self.TTTFrame, command=lambda Y=y, X=x: self.TTTBtn_onClick(Y, X), font='calibri 34 bold', text="", relief='groove', borderwidth=3, width=3, height=1))
                 self.TTTButtons[y][x].grid(row=y, column=x, ipadx=(0), ipady=(0), padx=(5, 5), pady=(5, 5), sticky=NSEW)
 
     def TTTBtn_onClick(self, Y, X):
-        if self.getBtnText(Y, X) == '':
+        if self.getBtnText(Y, X) == "":
             text = self.turn.getPlayerIcon()
             self.setBtnText(Y, X, text)
             if self.checkWin():
@@ -71,55 +71,52 @@ class MainTicTacToe(Component.HeadComponent):
             for x in range(len(self.TTTButtons[y])):
                 self.setBtnText(y, x, "")
 
-    def resetGame(self):
-        self.resetButtonsText()
-        self.turn.resetTurn()
-        self.enableButtons()
-
     def checkWin(self):
+        textList = self.getAllBtnText()
+
+        def checkBtnRowWin(I, side):
+            # check if anybody has won be checking row by row
+            if side == 'diagonal':
+                if textList[I[0]['y']][I[0]['x']] != "":
+                    if textList[I[0]['y']][I[0]['x']] == textList[I[1]['y']][I[1]['x']] == textList[I[2]['y']][I[2]['x']]:
+                        return True
+            elif side == 'horizontal':
+                if textList[I][0] != "":
+                    if textList[I][0] == textList[I][1] == textList[I][2]:
+                        return True
+            elif side == 'vertical':
+                if textList[0][I] != "":
+                    if textList[0][I] == textList[1][I] == textList[2][I]:
+                        return True
+            return False
+
         # check horizontal, vertical, diagonal
         for I in range(len(self.TTTButtons)):
-            if self.checkBtnRowWin(I, 'horizontal') or self.checkBtnRowWin(I, 'vertical'):
+            if checkBtnRowWin(I, 'horizontal') or checkBtnRowWin(I, 'vertical'):
                 return True
-        if self.checkBtnRowWin([{'y': 0, 'x': 0}, {'y': 1, 'x': 1}, {'y': 2, 'x': 2}], 'diagonal'):
+        if checkBtnRowWin([{'y': 0, 'x': 0}, {'y': 1, 'x': 1}, {'y': 2, 'x': 2}], 'diagonal'):
             return True
-        elif self.checkBtnRowWin([{'y': 0, 'x': 2}, {'y': 1, 'x': 1}, {'y': 2, 'x': 0}], 'diagonal'):
+        elif checkBtnRowWin([{'y': 0, 'x': 2}, {'y': 1, 'x': 1}, {'y': 2, 'x': 0}], 'diagonal'):
             return True
-        return False
-
-    def checkBtnRowWin(self, I, side):
-        textList = self.getAllBtnText()
-        # check if anybody has won be checking row by row
-        if side == 'diagonal':
-            if textList[I[0]['y']][I[0]['x']] != '':
-                if textList[I[0]['y']][I[0]['x']] == textList[I[1]['y']][I[1]['x']] == textList[I[2]['y']][I[2]['x']]:
-                    return True
-        elif side == 'horizontal':
-            if textList[I][0] != '':
-                if textList[I][0] == textList[I][1] == textList[I][2]:
-                    return True
-        elif side == 'vertical':
-            if textList[0][I] != '':
-                if textList[0][I] == textList[1][I] == textList[2][I]:
-                    return True
         return False
 
     def doWin(self):
         self.endGame()
         if self.PopupsEnabled:
+            # if self.mode ==
             winner = self.turn.getPlayerName()
-            self.doPopupWinOrDraw(Winner=winner)
+            self.doPopup(Type="Win", Text=winner)
 
     def checkDraw(self):
         for y in range(len(self.TTTButtons)):
             for TTTBtn in self.TTTButtons[y]:
-                if TTTBtn['text'] == '':
+                if TTTBtn['text'] == "":
                     return False
         return True
 
     def doDraw(self):
         self.endGame()
-        self.doPopupWinOrDraw(Draw=True)
+        self.doPopup(Type="Draw")
 
     def getAllBtnText(self):
         textList = []
@@ -129,27 +126,15 @@ class MainTicTacToe(Component.HeadComponent):
                 textList[y].append(TTTBtn['text'])
         return textList
 
-    @staticmethod
-    def doPopupWinOrDraw(Winner='', Draw=False):
-        toplevel = Toplevel()
-        toplevel.minsize(100, 100)
-        label1 = Label(toplevel)
-        label1.grid(sticky=NSEW)
-        if Winner != "":
-            label1['text'] = "{0} WON!".format(Winner)
-        elif Draw:
-            label1['text'] = "Its a draw!"
-        else:
-            label1['text'] = "Something went wrong!"
-
     def endGame(self):
         self.disableButtons()
 
     def gameStarted(self):
         textList = self.getAllBtnText()
-        for labelText in textList:
-            if labelText != '':
-                return True
+        for textRow in textList:
+            for labelText in textRow:
+                if labelText != "":
+                    return True
         return False
 
     def checkChangeMode(self, ModeNr):
@@ -166,6 +151,11 @@ class MainTicTacToe(Component.HeadComponent):
             self.turn.setMode(Mode)
         else:
             return
+
+    def resetGame(self):
+        self.resetButtonsText()
+        self.turn.resetTurn()
+        self.enableButtons()
 
     def getMode(self):
         return self.mode

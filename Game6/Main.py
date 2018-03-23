@@ -8,9 +8,11 @@
 
 from tkinter import Tk
 from HeadClasses import Component
-import Turn
-import TicTacToe
 import Options
+import TicTacToe
+import Turn
+import Monkey
+import Ai
 
 
 class Main(Component.HeadComponent):
@@ -18,7 +20,7 @@ class Main(Component.HeadComponent):
         start of the application
     '''
 
-    Options = TicTacToe = Turn = None
+    Options = TicTacToe = Turn = Monkey = Ai = None
 
     fullscreen = True
     popupsEnabled = True
@@ -35,10 +37,10 @@ class Main(Component.HeadComponent):
         self.setupComponents()
         self.root.title("tic tac toe")
         self.root.iconbitmap('Images/favicon.ico')
-        self.setkeybinds()
+        self.setKeybinds()
         self.root.mainloop()
 
-    def setkeybinds(self):
+    def setKeybinds(self):
         self.root.bind('<Escape>', self.escapeFullscreen)
         self.root.bind('<Control-f>', self.toggleFullscreen)
         self.root.bind('<F11>', self.toggleFullscreen)
@@ -47,6 +49,8 @@ class Main(Component.HeadComponent):
         self.root.bind('<Control-Key-1>', self.setMode1)
         self.root.bind('<Control-Key-2>', self.setMode2)
         self.root.bind('<Control-Key-3>', self.setMode3)
+        self.root.bind('<Control-Key-4>', self.setMode4)
+        self.root.bind('<Control-Key-5>', self.setMode5)
 
     def quit(self, _event=None):  # _var = unused
         self.root.destroy()
@@ -59,6 +63,12 @@ class Main(Component.HeadComponent):
 
     def setMode3(self, _event=None):
         self.TicTacToe.ChangeMode(3)
+
+    def setMode4(self, _event=None):
+        self.TicTacToe.ChangeMode(4)
+
+    def setMode5(self, _event=None):
+        self.TicTacToe.ChangeMode(5)
 
     def resetGame(self, _event=None):
         self.TicTacToe.resetGame()
@@ -76,14 +86,18 @@ class Main(Component.HeadComponent):
         self.Options = Options.MainOptions(self.popupsEnabled)
         self.TicTacToe = TicTacToe.MainTicTacToe(self.popupsEnabled)
         self.Turn = Turn.MainTurn()
+        self.Ai = Ai.MainAi()
+        self.Monkey = Monkey.MainMonkey()
         # connect classes
         self.Options.addClasses(self.TicTacToe)
         self.TicTacToe.addClasses(self.Turn)
-        self.Turn.addClasses(self.TicTacToe)
+        self.Turn.addClasses(self.TicTacToe, self.Monkey, self.Ai)
         # setup gui
         self.Options.addGui(self.masterFrame)
         self.TicTacToe.addGui(self.masterFrame)
         self.Turn.addGui(self.masterFrame)
+
+        self.TicTacToe.ChangeMode(1)
 
 
 # start app only if directly accessed

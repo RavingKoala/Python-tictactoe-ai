@@ -2,6 +2,6 @@
 # 1 TODO:
 
 
-class MainAi():
+class MainMonkey():
     def __init__(self):
         pass

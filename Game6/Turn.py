@@ -13,10 +13,12 @@ class MainTurn(Component.HeadComponent):
     '''
 
     # predeclaring attributes
-    turnFrame = label1 = label2 = TTTGame = None
+    turnFrame = label1 = label2 = TTTGame = ai = monkey = None
 
-    players = [{"playerName": "Player1", "playerIcon": "", "label": ""},
-               {"playerName": "Player2", "playerIcon": "", "label": ""},
+    players = [{"playerName": "player1", "playerIcon": "", "label": ""},
+               {"playerName": "player2", "playerIcon": "", "label": ""},
+               {"playerName": "monkey", "playerIcon": "", "label": ""},
+               {"playerName": "monkey2", "playerIcon": "", "label": ""},
                {"playerName": "AI", "playerIcon": "", "label": ""},
                {"playerName": "AI2", "playerIcon": "", "label": ""}]
 
@@ -24,8 +26,10 @@ class MainTurn(Component.HeadComponent):
 
     turn = 0
 
-    def addClasses(self, TicTacToe):
-        self.TTTGame = TicTacToe
+    def addClasses(self, TicTacToeClass, MonkeyClass, AiClass):
+        self.TTTGame = TicTacToeClass
+        self.monkey = MonkeyClass
+        self.ai = AiClass
 
     def addGui(self, MasterFrame):
         # create new frame for tracking who's turn it is
@@ -37,19 +41,17 @@ class MainTurn(Component.HeadComponent):
         self.label1.grid(row=2, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
         self.label2 = Label(self.turnFrame, width=10, height=5)
         self.label2.grid(row=3, column=0, padx=(50, 10), pady=(10, 10), sticky=NSEW)
-        self.setMode(1)
-        self.resetTurn()
 
     def getPlayerIcon(self):
-        return self.playingPlayers[self.turn]['playerIcon']
+        return self.playingPlayers[self.getTurn()]['playerIcon']
 
     def changeTurn(self):
-        newTurn = (self.turn + 1) % 2
+        newTurn = (self.getTurn() + 1) % 2
         self.setTurn(newTurn)
         self.updateTurnColor()
 
     def updateTurnColor(self):
-        LabelNr = self.playingPlayers[self.turn]['label']
+        LabelNr = self.playingPlayers[self.getTurn()]['label']
 
         if LabelNr == 'label1':
             self.label1.configure(background='green2')
@@ -59,8 +61,8 @@ class MainTurn(Component.HeadComponent):
             self.label2.configure(background='green2')
 
     def updateLabelText(self):
-        self.label1['text'] = self.playingPlayers[0]['playerName'] + "\n" + self.playingPlayers[0]['playerIcon']
-        self.label2['text'] = self.playingPlayers[1]['playerName'] + "\n" + self.playingPlayers[1]['playerIcon']
+        self.label1.configure(text=self.playingPlayers[0]['playerName'] + "\n" + self.playingPlayers[0]['playerIcon'])
+        self.label2.configure(text=self.playingPlayers[1]['playerName'] + "\n" + self.playingPlayers[1]['playerIcon'])
 
     def resetTurn(self):
         self.setTurn(randint(0, 1))
@@ -68,12 +70,20 @@ class MainTurn(Component.HeadComponent):
 
     def setTurn(self, Int):
         self.turn = Int
+        turnName = self.getPlayerName()
+        print(turnName)
+        if turnName != "player1" and turnName != "player2":
+            self.TTTGame.disableButtons()
+            if turnName == "monkey" or turnName == "monkey2":
+                self.monkey.requestTurn()
+            if turnName == "AI" or turnName == "AI2":
+                self.ai.requestTurn()
 
     def getTurn(self):
         return self.turn
 
     def getPlayerName(self):
-        return self.playingPlayers[self.turn]['playerName']
+        return self.playingPlayers[self.getTurn()]['playerName']
 
     def setMode(self, Mode):
         self.clearPlayerData()
@@ -88,15 +98,22 @@ class MainTurn(Component.HeadComponent):
             player['label'] = ""
 
     def appointPlayers(self, Mode):
+        self.playingPlayers = []
         if Mode == 1:
-            self.playingPlayers[0] = self.players[0]
-            self.playingPlayers[1] = self.players[1]
+            self.playingPlayers.append(self.players[0])
+            self.playingPlayers.append(self.players[1])
         elif Mode == 2:
-            self.playingPlayers[0] = self.players[0]
-            self.playingPlayers[1] = self.players[2]
+            self.playingPlayers.append(self.players[0])
+            self.playingPlayers.append(self.players[2])
         elif Mode == 3:
-            self.playingPlayers[0] = self.players[2]
-            self.playingPlayers[1] = self.players[3]
+            self.playingPlayers.append(self.players[0])
+            self.playingPlayers.append(self.players[4])
+        elif Mode == 4:
+            self.playingPlayers.append(self.players[2])
+            self.playingPlayers.append(self.players[3])
+        elif Mode == 5:
+            self.playingPlayers.append(self.players[4])
+            self.playingPlayers.append(self.players[5])
 
     def updatePlayerData(self):
         self.setPlayerLabel()
@@ -107,6 +124,6 @@ class MainTurn(Component.HeadComponent):
         self.playingPlayers[1]['label'] = "label2"
 
     def setRandomplayerIcon(self):
-        player = randint(0, 1)
-        self.playingPlayers[player]['playerIcon'] = 'X'
-        self.playingPlayers[1 if player == 0 else 0]['playerIcon'] = 'O'
+        playerIndex = randint(0, 1)
+        self.playingPlayers[playerIndex]['playerIcon'] = 'X'
+        self.playingPlayers[1 if playerIndex == 0 else 0]['playerIcon'] = 'O'
