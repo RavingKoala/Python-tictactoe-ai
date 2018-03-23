@@ -45,7 +45,7 @@ class MainOptions(Component.HeadComponent):
         self.TTTGame.checkChangeMode(2)
 
     def onevAi_onClick(self):
-        self.TTTGame.checkChangeMode(4)
+        self.TTTGame.checkChangeMode(3)
 
     def restart_onClick(self):
         self.TTTGame.resetGame()
