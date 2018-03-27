@@ -20,6 +20,8 @@ class HeadComponent():
 
     def doPopup(self, Type="Undefined", Text="Empty"):
         toplevel = Toplevel()
+        toplevel.minsize(200, 10)
+        self.configureEvenWeight(toplevel, 3, 3)
         toplevel.focus_force()
 
         def selfDestroy(_event=None):
@@ -30,7 +32,7 @@ class HeadComponent():
 
         def getPopupMessage(Type="Undefined", Text="Empty"):
             if type == "Lost":
-                return "you lost." + "\n" + "Please try again!"
+                return "You lost." + "\n" + "Please try again!"
             elif Type == "Draw":
                 return "Its a draw!" + "\n" + "Please try again!"
             elif Type == "Win":
@@ -40,12 +42,10 @@ class HeadComponent():
             return "Something went wrong." + "\n" + "Please contact the developer about this problem."
 
         setKeybinds(toplevel)
-        toplevel.minsize(200, 10)
         label1 = Label(toplevel)
         label1.grid(row=1, column=1, sticky=NSEW)
-        self.configureEvenWeight(toplevel, 3, 3)
         if Type == "Undefined" and Text == "Empty":
-            label1.configure(text="Something went wrong." + "\n" + "Please contact the developer about this problem.")
+            message = "Something went wrong." + "\n" + "Please contact the developer about this problem."
         else:
             message = getPopupMessage(Type, Text)
         label1.configure(text=message)

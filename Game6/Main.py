@@ -24,8 +24,6 @@ class Main(Component.HeadComponent):
 
     settings = {'fullscreen': False, 'popupsEnabled': True}
 
-    testText = 1
-
     def __init__(self):
         self.masterFrame = self.root = Tk()
         # set percentage of stretch
@@ -89,7 +87,7 @@ class Main(Component.HeadComponent):
 
     def setupComponents(self):
         # declare classes
-        self.Options = Options.MainOptions(self.settings['popupsEnabled'])
+        self.Options = Options.MainOptions()
         self.TicTacToe = TicTacToe.MainTicTacToe(self.settings['popupsEnabled'])
         self.Turn = Turn.MainTurn()
         self.Monkey = Monkey.MainMonkey()

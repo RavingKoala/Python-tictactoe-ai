@@ -14,9 +14,6 @@ class MainOptions(Component.HeadComponent):
     # predeclaring attributes
     optionsFrame = TTTGame = oneVsOneBtn = monkeyBtn = aiBtn = restartBtn = None
 
-    def __init__(self, PopupsBool):
-        self.PopupsEnabled = PopupsBool
-
     def addClasses(self, TicTacToeClass):
         self.TTTGame = TicTacToeClass
 

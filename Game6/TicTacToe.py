@@ -144,8 +144,6 @@ class MainTicTacToe(Component.HeadComponent):
         if self.PopupsEnabled and self.gameStarted():
             if messagebox.askquestion("Change mode", "Are you sure you want to reset the game?", icon='warning') == 'yes':
                 self.ChangeMode(ModeNr)
-            else:
-                self.ChangeMode(ModeNr)
         else:
             self.ChangeMode(ModeNr)
 
@@ -154,13 +152,10 @@ class MainTicTacToe(Component.HeadComponent):
         if self.getMode() != Mode:
             self.setMode(Mode)
             self.turn.setMode(Mode)
-        else:
-            return
 
     def resetGame(self):
         self.resetButtonsText()
         self.turn.resetTurn()
-        self.enableButtons()
 
     def getMode(self):
         return self.mode
